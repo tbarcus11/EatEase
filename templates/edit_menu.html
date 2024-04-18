@@ -59,17 +59,34 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .btn {
+        .btn, button {
             padding: 8px 15px;
             margin-left: 10px;
             background-color: #008cba;
             color: white;
             text-decoration: none;
-            border-radius: 5
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover, button:hover {
+            background-color: #007ba7;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 24px); /* Account for padding and borders */
+        }
+        form {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <!-- Header content -->
+    </div>
     <h1>Edit Menu</h1>
     <ul>
         {% for item in menu_items %}

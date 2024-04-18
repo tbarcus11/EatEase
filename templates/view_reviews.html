@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews for Restaurant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px; /* Padding for the entire body for better aesthetics */
+            text-align: center; /* Center-aligning the text for a cleaner look */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0;
+        }
+        li {
+            background-color: white;
+            margin: 10px auto; /* Centering list items */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            text-align: left; /* Text-align left for content within list items */
+            max-width: 600px; /* Max width for better readability on wider screens */
+        }
+        strong {
+            color: #008cba; /* Highlight username with a distinct color */
+        }
+        p {
+            margin-top: 5px;
+        }
+        a {
+            display: inline-block;
+            background-color: #008cba;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border-radius: 5px;
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effects */
+        }
+        a:hover {
+            background-color: #007ba7; /* Darker shade on hover for better interaction feedback */
+        }
+    </style>
+</head>
+<body>
+    <h1>Reviews</h1>
+    {% if reviews %}
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    <strong>{{ review.username }}</strong> (Rated: {{ review.rating }} stars)
+                    <p>{{ review.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews available.</p>
+    {% endif %}
+    <a href="/leave_review/{{ rest_id }}">Leave a Review</a>
+    <a href="/restaurant/{{ rest_id }}">Back to Restaurant</a>
+</body>
+</html>

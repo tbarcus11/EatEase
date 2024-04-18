@@ -1,18 +1,23 @@
-Order - needs table and functionality
+Order - needs table and functionality -done
 
-Review - needs table and functionality - T working on
-Display reviews on restaraunt page
-
-
-Signup - needs option to sign up as owner or reg username ???
-
-Edit Menu - needs working - E working on
-
-Fix login issue , auto logged in from prev session
+Review - needs table and functionality - done
+Display reviews on restaraunt page - 1 join - done
 
 
-*Join Queries*
+Signup - needs option to sign up as owner or reg user - done
+Create Restraunt as new owner - done
 
-Styling
+TODO ⬇️
+Add current orders function - potential join - Orders table has rest_id from an order, and can join with restaurants based off rest_id
 
-Edge Cases - login as false user sometimes sticks etc.
+Edit Menu - needs working - done
+
+Fix login issue , auto logged in from prev session - done
+
+Most popular - 2nd join - TODO****
+
+*Join Queries* - need 2
+
+Styling -done
+
+Edge Cases - login as false user sometimes sticks etc. - done i think

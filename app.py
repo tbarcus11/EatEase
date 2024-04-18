@@ -128,10 +128,23 @@ def signup_user():
         email = request.form['email']
         cur = conn.cursor()
         cur.execute('INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)', (username, password, email, 1,))
-        conn.commit()
-        conn.close()
+        cur.close()
+
+        cur2 =  conn.cursor()
+        cur2.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
+        user = cur2.fetchone()
         session['logged_in'] = True  # Set session as logged in
         session['username'] = username  # Optionally store the username
+        session['user_id'] = user['id']  # Storing user ID in session
+        session['user_role'] = user['role']  # Assuming 'role' is a column in your users table
+        conn.commit()
+        conn.close()
+
+
+        session['logged_in'] = True  # Set session as logged in
+        session['username'] = username  # Optionally store the username
+        session['user_id'] = user['id']  # Storing user ID in session
+        session['user_role'] = user['role']  # Assuming 'role' is a column in your users table
         return redirect(url_for('home'))
 
     else:
@@ -199,6 +212,33 @@ def owner_dashboard():
     else:
         return redirect(url_for('login'))  # Redirect non-owners to the login page
 
+@app.route('/add_restaurant', methods=['POST'])
+def add_restaurant():
+    if 'logged_in' in session and session['user_role'] == 2:
+        name = request.form['name']
+        location = request.form['location']
+        owner = session['user_id']
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO restaurants (name, location, owner) VALUES (?, ?, ?)', (name, location, owner))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('owner_dashboard'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/delete_restaurant/<int:rest_id>', methods=['POST'])
+def delete_restaurant(rest_id):
+    if 'logged_in' in session and session['user_role'] == 2:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('DELETE FROM restaurants WHERE rest_id = ? AND owner = ?', (rest_id, session['user_id']))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('owner_dashboard'))
+    else:
+        return redirect(url_for('login'))
 
 
 #done
@@ -267,9 +307,20 @@ def leave_review(rest_id):
         conn.commit()
         conn.close()
         flash('Your review has been successfully submitted.')
-        return redirect(url_for('restaurant_details', rest_id=rest_id))
+        return redirect(url_for('view_reviews', rest_id=rest_id))
     else:
         return render_template('leave_review.html', rest_id=rest_id)
+
+@app.route('/view_reviews/<int:rest_id>', methods=['GET'])
+def view_reviews(rest_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT users.username, reviews.rating, reviews.description FROM reviews JOIN users ON reviews.user_id = users.id WHERE rest_id = ?', (rest_id,))
+    reviews = cur.fetchall()
+    conn.close()
+
+    
+    return render_template('view_reviews.html', reviews=reviews, rest_id=rest_id)
 
 
 if __name__ == '__main__':

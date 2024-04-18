@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leave Review - EatEase</title>
     <style>
-        body, h1, ul, li {
+        body, h1 {
             margin: 0;
             padding: 0;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f5f5f5;
-            padding-top: 60px;
+            padding-top: 80px; /* Increased to ensure space under fixed header */
             color: #333;
         }
         .header {
@@ -45,31 +45,47 @@
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 20px;
+            margin: 20px 0;
             font-size: 24px;
         }
-        ul {
-            list-style-type: none;
+        form {
+            max-width: 600px;
+            margin: auto;
             padding: 20px;
-        }
-        li {
-            background-color: white;
-            margin-bottom: 10px;
-            padding: 20px;
+            background: white;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .btn {
-            padding: 8px 15px;
-            margin-left: 10px;
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        textarea {
+            height: 150px;
+        }
+        button {
             background-color: #008cba;
             color: white;
-            text-decoration: none;
-            border-radius: 5
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #007ba7;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <!-- Optionally, you could place conditional display content here -->
+    </div>
     <h1>Leave a Review</h1>
     <form action="/leave_review/{{ rest_id }}" method="post">
         <label for="rating">Rating (1-5):</label>

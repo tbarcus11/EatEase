@@ -16,7 +16,7 @@ c.execute("DROP TABLE IF EXISTS orders")
 # Create tables
 c.execute('''
 CREATE TABLE IF NOT EXISTS restaurants (
-    rest_id INTEGER,
+    rest_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     location TEXT NOT NULL,
     owner INTEGER
@@ -77,9 +77,9 @@ c.execute("INSERT INTO users (username, password, email, role) VALUES ('o', 'o',
 c.execute("INSERT INTO users (username, password, email, role) VALUES ('mcds-owner', 'mcds-owner', 'mcdsowner@gmail.com', 2)")
 
 # Insert mock data
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (1, 'The Great Pizza', '123 Main St', 10001)")
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (2, 'Burger House', '456 Side Ave', 10001)")
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (3, 'McDonalds', '789 Des St', 10002)")
+c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('The Great Pizza', '123 Main St', 10001)")
+c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('Burger House', '456 Side Ave', 10001)")
+c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('McDonalds', '789 Des St', 10002)")
 
 
 c.execute("INSERT INTO menu_items (rest_id, name, description, price) VALUES (1, 'Margherita Pizza', 'Classic Margherita with fresh mozzarella and basil.', 12.99)")
@@ -91,6 +91,8 @@ c.execute("INSERT INTO menu_items (rest_id, name, description, price) VALUES (2,
 
 c.execute("INSERT INTO menu_items (rest_id, name, description, price) VALUES (3, 'McDouble', 'McDub', 3.99)")
 c.execute("INSERT INTO menu_items (rest_id, name, description, price) VALUES (3, 'Fries', 'Fries', 4.99)")
+
+c.execute("INSERT INTO reviews (user_id, rest_id, rating, description) VALUES (10001, 1, 1, 'not good')")
 # Commit changes and close the connection
 conn.commit()
 conn.close()
