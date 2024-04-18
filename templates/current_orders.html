@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Orders</title>
+</head>
+<body>
+    <h1>Your Current Orders</h1>
+    {% if orders %}
+        <ul>
+            {% for order in orders %}
+            <li>
+                Order ID: {{ order.order_id }}, Item: {{ order.menu_item_name }},
+                Restaurant: {{ order.restaurant_name }}, Location: {{ order.location }},
+                Customer: {{ order.customer_username }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No current orders found.</p>
+    {% endif %}
+    <a href="/">Back to Home</a>
+</body>
+</html>

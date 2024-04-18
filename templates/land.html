@@ -72,6 +72,64 @@
         .btn:hover {
             background-color: #007ba7; /* Darker blue for hover effect */
         }
+        .sidebar {
+            height: 100%;
+            width: 0; /* Sidebar width (hidden initially) */
+            position: fixed; /* Fixed Sidebar (stationary when page scrolls) */
+            z-index: 3; /* Sit on top */
+            top: 0; /* Stay at the top */
+            right: 0; /* Slide from the right */
+            background-color: #d7d7d7; /* Sidebar background color */
+            overflow-x: hidden; /* Disable horizontal scroll */
+            transition: 0.5s; /* Transition effect when sliding in/out */
+            padding-top: 60px; /* Padding from the top of the page */
+        }
+        .overlay {
+        position: fixed;
+        display: none; /* Hidden by default */
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+        z-index: 1; /* Directly below the sidebar */
+        cursor: pointer; /* Suggests clickable */
+        }
+        
+
+        .sidebar h2 {
+            color: #ff6347; /* Header color to match the main header */
+            margin: 0;
+            padding: 15px;
+            border-bottom: 1px solid #ddd; /* Separator for the title */
+        }
+
+#ordersContent div {
+    padding: 15px;
+    border-bottom: 1px solid #eee; /* Lighter separator for each order */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#ordersContent div:hover {
+    background-color: #f9f9f9; /* Highlight effect on hover */
+}
+
+.closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: #ff6347; /* Match the close button with the header color */
+    cursor: pointer;
+}
+
+.closebtn:hover {
+    color: #c74343; /* Darker shade on hover */
+}
+
     </style>
 </head>
 <body>
@@ -84,7 +142,20 @@
             <a href="/login"><button class="signup-login_btn">Login</button></a>
         {% endif %}
     </div>
-    <h1>Welcome to EatEase!</h1>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <h2>Current Orders</h2>
+        <div id="ordersContent"><!-- Orders will be loaded here --></div>
+    </div>
+    <div id="myOverlay" class="overlay"></div>
+    <div id="main">
+        {% if session.get('logged_in') %}
+                {% if session.get('user_role') == 1 %}
+                    <button class="btn" onclick="openNav()">View Current Orders</button>
+                {% endif %}
+        {% endif %}
+    <h1>Welcome to EatEase!
+    </h1>
     <ul>
         {% for restaurant in restaurants %}
         <li>
@@ -93,6 +164,7 @@
                 {% if session.get('user_role') == 1 %}
                     <a href="/customer_menu/{{ restaurant.rest_id }}" class="btn">Order</a>
                     <a href="/view_reviews/{{ restaurant.rest_id }}" class="btn">Reviews</a>
+
                 {% elif session.get('user_role') == 2 %}
                     <a href="/manage/{{ restaurant.rest_id }}" class="btn">Manage Menu</a>
                 {% endif %}
@@ -102,5 +174,33 @@
         </li>
         {% endfor %}
     </ul>
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "700px";
+            document.getElementById("myOverlay").style.display = "block";
+            fetchOrders(); // Function to fetch and display orders
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        function fetchOrders() {
+            fetch('/current_orders')
+                .then(response => response.json())
+                .then(data => {
+                    const ordersContainer = document.getElementById('ordersContent');
+                    ordersContainer.innerHTML = ''; // Clear previous content
+                    data.forEach(order => {
+                        const orderDiv = document.createElement('div');
+                        orderDiv.innerHTML = `Order ID: ${order.order_id}, Item: ${order.menu_item_name}, Restaurant: ${order.restaurant_name}, Location: ${order.location}, Customer: ${order.customer_username}`;
+                        ordersContainer.appendChild(orderDiv);
+                    });
+                })
+                .catch(error => console.error('Error loading orders:', error));
+        }
+    </script>
 </body>
 </html>

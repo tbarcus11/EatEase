@@ -9,12 +9,16 @@ Create Restraunt as new owner - done
 
 TODO ⬇️
 Add current orders function - potential join - Orders table has rest_id from an order, and can join with restaurants based off rest_id
+JOINED Table should be in format = Order_ID | Menu Item Name | Restraunt Name | Location | Customer Username
+
+Fix it showing up beofre logging in - done
+
 
 Edit Menu - needs working - done
 
 Fix login issue , auto logged in from prev session - done
 
-Most popular - 2nd join - TODO****
+Most popular - 2nd join - TODO**** - maybe 
 
 *Join Queries* - need 2
 

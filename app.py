@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g# type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, g# type: ignore
 import sqlite3
+
 
 app = Flask(__name__)
 
@@ -321,6 +322,41 @@ def view_reviews(rest_id):
 
     
     return render_template('view_reviews.html', reviews=reviews, rest_id=rest_id)
+
+
+@app.route('/current_orders')
+def current_orders():
+    if 'logged_in' not in session or not session['logged_in']:
+        return jsonify({'error': 'Not logged in'}), 403
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT 
+            o.order_id,
+            mi.name AS menu_item_name,
+            r.name AS restaurant_name,
+            r.location,
+            u.username AS customer_username
+        FROM 
+            orders o
+        JOIN 
+            menu_items mi ON o.menu_item_id = mi.menu_item_id
+        JOIN 
+            restaurants r ON mi.rest_id = r.rest_id
+        JOIN 
+            users u ON o.user_id = u.id
+        WHERE 
+            u.id = ?
+        ORDER BY 
+            o.order_id
+    ''', (user_id,))
+    orders = [dict(row) for row in cur.fetchall()]
+    conn.close()
+
+    return jsonify(orders)
+
 
 
 if __name__ == '__main__':
