@@ -11,6 +11,7 @@ c.execute("DROP TABLE IF EXISTS menu_items")
 c.execute("DROP TABLE IF EXISTS users")
 c.execute("DROP TABLE IF EXISTS restaurants")
 c.execute("DROP TABLE IF EXISTS reviews")
+c.execute("DROP TABLE IF EXISTS orders")
 
 # Create tables
 c.execute('''
@@ -52,6 +53,19 @@ c.execute('''
     description TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (rest_id) REFERENCES restaurants(rest_id)
+);
+''')
+
+c.execute('''
+    CREATE TABLE orders (
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    rest_id INTEGER,
+    menu_item_id
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (rest_id) REFERENCES restaurants(rest_id)
+    FOREIGN KEY (menu_item_id) REFERENCES menu_items(menu_item_id)
 );
 ''')
 

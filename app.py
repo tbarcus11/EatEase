@@ -83,7 +83,9 @@ def login():
 def signup():
     return render_template('signup.html')
     
-    
+@app.route('/order_confirmation')
+def order_confirmation():
+    return render_template('order_confirmation.html')
 
 @app.route('/signup_owner', methods=['GET','POST'])
 def signup_owner():
@@ -146,23 +148,39 @@ def logout():
 
 
 
-@app.route('/customer_menu/<int:rest_id>')
-def order(rest_id):
+@app.route('/customer_menu/<int:rest_id>', methods=['GET', 'POST'])
+def view_menu(rest_id):
     if 'logged_in' in session and session['logged_in']:
-        # Simulate order processing
         conn = get_db_connection()
         cur = conn.cursor()
-        # Query for the specific restaurant
-        cur.execute('SELECT name, location FROM restaurants WHERE rest_id = ?', (rest_id,))
-        restaurant = cur.fetchone()
 
-        cur.execute('SELECT name, price FROM menu_items WHERE rest_id = ?', (rest_id,))
-        menu_items = cur.fetchall()
-        conn.close()
-        return render_template('customer_menu.html', restaurant=restaurant, menu_items=menu_items)
+        if request.method == 'POST':
+            # Process the order
+            user_id = session['user_id']  # Assuming you store user_id in session
+            menu_item_id = request.form['menu_item_id']
+            # Insert order into the order table
+            print("User_ID: ", user_id)
+            print("rest_ID: ", rest_id)
+            print("menu_id:", menu_item_id)
+
+
+            cur.execute('INSERT INTO orders (rest_id, user_id, menu_item_id) VALUES (?, ?, ?)', (rest_id, user_id, menu_item_id,))
+            conn.commit()
+
+            # Optionally, redirect to a confirmation page or back to the menu
+            return redirect(url_for('order_confirmation'))
+        else:
+            # Query for the specific restaurant
+            cur.execute('SELECT name, location, rest_id FROM restaurants WHERE rest_id = ?', (rest_id,))
+            restaurant = cur.fetchone()
+
+            cur.execute('SELECT menu_item_id, name, price FROM menu_items WHERE rest_id = ?', (rest_id,))
+            menu_items = cur.fetchall()
+            conn.close()
+            return render_template('customer_menu.html', restaurant=restaurant, menu_items=menu_items)
     else:
         # Redirect to login if not logged in
-        return redirect(url_for('login'))
+        return redirect(url_for('login.html'))
 
 
 

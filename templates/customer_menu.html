@@ -65,7 +65,8 @@
             background-color: #008cba;
             color: white;
             text-decoration: none;
-            border-radius: 5
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -75,7 +76,14 @@
     <h2>Menu</h2>
     <ul>
         {% for item in menu_items %}
-        <li>{{ item.name }} - ${{ item.price }}</li>
+        <li>
+            {{ item.name }} - ${{ item.price }}
+            <!-- Form to handle the order process -->
+            <form action="/customer_menu/{{ restaurant.rest_id }}" method="post">
+                <input type="hidden" name="menu_item_id" value="{{ item.menu_item_id }}">
+                <button type="submit" class="btn">Order</button>
+            </form>
+        </li>
         {% endfor %}
     </ul>
     <a href="/">Back to Restaurants</a>
