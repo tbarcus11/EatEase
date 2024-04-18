@@ -55,14 +55,17 @@ c.execute('''
 );
 ''')
 
-c.execute("INSERT INTO users (username, password, email, role) VALUES ('reg-customer', 'reg-customer', 'reg@gmail.com', 1)")
+c.execute("INSERT INTO users (id, username, password, email) VALUES (9999, 'dummy', 'dummy', 'dummy@example.com');")
+c.execute("DELETE FROM users WHERE id = 9999;")
+
+c.execute("INSERT INTO users (username, password, email, role) VALUES ('r', 'r', 'reg@gmail.com', 1)")
 c.execute("INSERT INTO users (username, password, email, role) VALUES ('o', 'o', 'mainowner@gmail.com', 2)")
 c.execute("INSERT INTO users (username, password, email, role) VALUES ('mcds-owner', 'mcds-owner', 'mcdsowner@gmail.com', 2)")
 
 # Insert mock data
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (1, 'The Great Pizza', '123 Main St', 2)")
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (2, 'Burger House', '456 Side Ave', 2)")
-c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (3, 'McDonalds', '789 Des St', 3)")
+c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (1, 'The Great Pizza', '123 Main St', 10001)")
+c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (2, 'Burger House', '456 Side Ave', 10001)")
+c.execute("INSERT INTO restaurants (rest_id, name, location, owner) VALUES (3, 'McDonalds', '789 Des St', 10002)")
 
 
 c.execute("INSERT INTO menu_items (rest_id, name, description, price) VALUES (1, 'Margherita Pizza', 'Classic Margherita with fresh mozzarella and basil.', 12.99)")

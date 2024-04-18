@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash# type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g# type: ignore
 import sqlite3
 
 app = Flask(__name__)
@@ -10,6 +10,15 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn 
 
+# A global flag to ensure session clearing happens only once
+session_cleared = False
+
+@app.before_request
+def handle_session_clearing():
+    global session_cleared
+    if not session_cleared:
+        session.clear()
+        session_cleared = True
 
 
 @app.route('/')
@@ -70,15 +79,53 @@ def login():
 
 
 
-@app.route('/signup', methods=['GET','POST'])
+@app.route('/signup')
 def signup():
+    return render_template('signup.html')
+    
+    
+
+@app.route('/signup_owner', methods=['GET','POST'])
+def signup_owner():
     if request.method == 'POST':
         conn = get_db_connection()
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         cur = conn.cursor()
-        cur.execute('INSERT INTO users (username, password, email) VALUES (?, ?, ?)', (username, password, email,))
+        cur.execute('INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)', (username, password, email, 2,))
+        cur.close()
+
+        cur2 =  conn.cursor()
+        cur2.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
+        user = cur2.fetchone()
+        session['logged_in'] = True  # Set session as logged in
+        session['username'] = username  # Optionally store the username
+        session['user_id'] = user['id']  # Storing user ID in session
+        session['user_role'] = user['role']  # Assuming 'role' is a column in your users table
+        conn.commit()
+        conn.close()
+
+
+        session['logged_in'] = True  # Set session as logged in
+        session['username'] = username  # Optionally store the username
+        session['user_id'] = user['id']  # Storing user ID in session
+        session['user_role'] = user['role']  # Assuming 'role' is a column in your users table
+        return redirect(url_for('owner_dashboard'))
+
+    else:
+        return render_template('signup_owner.html')
+    
+
+@app.route('/signup_user', methods=['GET','POST'])
+def signup_user():
+    if request.method == 'POST':
+        conn = get_db_connection()
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        cur = conn.cursor()
+        cur.execute('INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)', (username, password, email, 1,))
         conn.commit()
         conn.close()
         session['logged_in'] = True  # Set session as logged in
@@ -86,7 +133,7 @@ def signup():
         return redirect(url_for('home'))
 
     else:
-        return render_template('signup.html')
+        return render_template('signup_user.html')
 
 
 
@@ -99,11 +146,20 @@ def logout():
 
 
 
-@app.route('/order/<int:rest_id>')
+@app.route('/customer_menu/<int:rest_id>')
 def order(rest_id):
     if 'logged_in' in session and session['logged_in']:
         # Simulate order processing
-        return render_template('order_confirmation.html', rest_id=rest_id)
+        conn = get_db_connection()
+        cur = conn.cursor()
+        # Query for the specific restaurant
+        cur.execute('SELECT name, location FROM restaurants WHERE rest_id = ?', (rest_id,))
+        restaurant = cur.fetchone()
+
+        cur.execute('SELECT name, price FROM menu_items WHERE rest_id = ?', (rest_id,))
+        menu_items = cur.fetchall()
+        conn.close()
+        return render_template('customer_menu.html', restaurant=restaurant, menu_items=menu_items)
     else:
         # Redirect to login if not logged in
         return redirect(url_for('login'))
@@ -115,8 +171,11 @@ def owner_dashboard():
     if 'logged_in' in session and session['user_role'] == 2:  # Assuming '2' is for restaurant owners
         conn = get_db_connection()
         cur = conn.cursor()
+
+        print("id check: ", session['user_id'])
         cur.execute('SELECT rest_id, name, location FROM restaurants WHERE owner = ?', (session['user_id'],))
         restaurants = cur.fetchall()
+        print(restaurants)
         conn.close()
         return render_template('owner_dashboard.html', restaurants=[dict(row) for row in restaurants])
     else:
@@ -150,9 +209,7 @@ def edit_menu(rest_id):
             cur.execute('UPDATE menu_items SET name = ?, price = ? WHERE menu_item_id = ? AND rest_id = ?', (item_name, float(item_price), item_id, rest_id))
         
         elif action == 'delete':
-            print("in delete action")
             menu_item_id = request.form['menu_item_id']
-            print("MENU ITEM ID:", menu_item_id)
             cur.execute('DELETE FROM menu_items WHERE menu_item_id = ?', (menu_item_id,))
 
         # Commit changes and close connection
@@ -161,6 +218,7 @@ def edit_menu(rest_id):
 
         # Redirect to the same page to see changes
         return redirect(url_for('edit_menu', rest_id=rest_id))
+    
     elif request.method == 'GET':
         conn = get_db_connection()
         cur = conn.cursor()
@@ -187,8 +245,7 @@ def leave_review(rest_id):
         user_id = session['user_id']
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute('INSERT INTO reviews (user_id, rest_id, rating, description) VALUES (?, ?, ?, ?)',
-                    (user_id, rest_id, rating, description))
+        cur.execute('INSERT INTO reviews (user_id, rest_id, rating, description) VALUES (?, ?, ?, ?)', (user_id, rest_id, rating, description))
         conn.commit()
         conn.close()
         flash('Your review has been successfully submitted.')

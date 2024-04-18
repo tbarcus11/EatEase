@@ -4,14 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login/Signup - EatEase</title>
+    <style>
+        body, h1, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 60px;
+            color: #333;
+        }
+        .header {
+            background-color: #ff6347;
+            padding: 10px 20px;
+            text-align: right;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header p {
+            color: white;
+            display: inline;
+        }
+        .signup-login_btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .signup-login_btn:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 20px;
+        }
+        li {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn {
+            padding: 8px 15px;
+            margin-left: 10px;
+            background-color: #008cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to EatEase!</h1>
     <h2>Signup</h2>
-    <form action="/signup" method="post">
-        Username: <input type="text" name="username" required>
-        Password: <input type="password" name="password" required>
-        Email: <input type="text" name="email" required>
-        <button type="submit">SignUp</button>
-    </form>
+    <a href="/signup_user"><button class="btn">Sign Up as a Customer</button>
+    <a href="/signup_owner"><button class="btn">Sign Up as an Owner</button>
+    </h2>
 

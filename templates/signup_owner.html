@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leave Review - EatEase</title>
+    <title>Login/Signup - EatEase</title>
     <style>
         body, h1, ul, li {
             margin: 0;
@@ -70,22 +70,11 @@
     </style>
 </head>
 <body>
-    <h1>Leave a Review</h1>
-    <form action="/leave_review/{{ rest_id }}" method="post">
-        <label for="rating">Rating (1-5):</label>
-        <select name="rating" id="rating" required>
-            <option value="">Choose a rating</option>
-            <option value="1">1 - Poor</option>
-            <option value="2">2 - Fair</option>
-            <option value="3">3 - Good</option>
-            <option value="4">4 - Very Good</option>
-            <option value="5">5 - Excellent</option>
-        </select>
-        <br>
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" required></textarea>
-        <br>
-        <button type="submit">Submit Review</button>
+    <h1>Welcome to EatEase!</h1>
+    <h2>Signup</h2>
+    <form action="/signup_owner" method="post">
+        Username: <input type="text" name="username" required>
+        Password: <input type="password" name="password" required>
+        Email: <input type="text" name="email" required>
+        <button type="submit">Sign Up as Owner</button>
     </form>
-</body>
-</html>

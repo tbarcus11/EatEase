@@ -1,10 +1,15 @@
 Order - needs table and functionality
 
 Review - needs table and functionality - T working on
+Display reviews on restaraunt page
+
 
 Signup - needs option to sign up as owner or reg username ???
 
 Edit Menu - needs working - E working on
+
+Fix login issue , auto logged in from prev session
+
 
 *Join Queries*
 
