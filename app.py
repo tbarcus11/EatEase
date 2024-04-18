@@ -11,6 +11,10 @@ def get_db_connection():
     return conn
 
 
+
+
+
+
 @app.route('/')
 def home():
     conn = get_db_connection()
