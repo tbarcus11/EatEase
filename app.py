@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session# type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session, flash# type: ignore
 import sqlite3
 
 app = Flask(__name__)
@@ -8,10 +8,7 @@ app.secret_key = 'key'
 def get_db_connection():
     conn = sqlite3.connect('eatease.db')
     conn.row_factory = sqlite3.Row
-    return conn
-
-
-
+    return conn 
 
 
 
@@ -127,20 +124,77 @@ def owner_dashboard():
 
 
 
-
+#done
 @app.route('/edit_menu/<int:rest_id>', methods=['GET', 'POST'])
 def edit_menu(rest_id):
     if request.method == 'POST':
-        # Handle form submission for updating menu items
-        pass
+        # Determine action type from form data
+        action = request.form.get('action')
+
+        # Connect to the database
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+
+        # Handling based on action type
+        if action == 'add':
+            item_name = request.form['item_name']
+            item_price = request.form['item_price']
+            cur.execute('INSERT INTO menu_items (name, price, rest_id) VALUES (?, ?, ?)', (item_name, float(item_price), rest_id))
+        
+        elif action == 'edit':
+            item_name = request.form['item_name']
+            item_price = request.form['item_price']
+            # Assuming there is a unique identifier to locate the item
+            item_id = request.form['menu_item_id']
+            cur.execute('UPDATE menu_items SET name = ?, price = ? WHERE menu_item_id = ? AND rest_id = ?', (item_name, float(item_price), item_id, rest_id))
+        
+        elif action == 'delete':
+            print("in delete action")
+            menu_item_id = request.form['menu_item_id']
+            print("MENU ITEM ID:", menu_item_id)
+            cur.execute('DELETE FROM menu_items WHERE menu_item_id = ?', (menu_item_id,))
+
+        # Commit changes and close connection
+        conn.commit()
+        conn.close()
+
+        # Redirect to the same page to see changes
+        return redirect(url_for('edit_menu', rest_id=rest_id))
     elif request.method == 'GET':
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute('SELECT name, price FROM menu_items WHERE rest_id = ?', (rest_id,))
+        cur.execute('SELECT name, price, menu_item_id FROM menu_items WHERE rest_id = ?', (rest_id,))
         menu_items = cur.fetchall()
         conn.close()
         return render_template('edit_menu.html', menu_items=[dict(item) for item in menu_items], rest_id=rest_id)
 
+
+@app.route('/leave_review/<int:rest_id>', methods=['GET', 'POST'])
+def leave_review(rest_id):
+    if 'logged_in' not in session:
+        flash("Log in first")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        rating = request.form['rating']
+        description = request.form['description']
+        
+        if not rating or not description:
+            flash("All fields are required.")
+            return render_template('leave_review.html', rest_id=rest_id)
+
+        user_id = session['user_id']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO reviews (user_id, rest_id, rating, description) VALUES (?, ?, ?, ?)',
+                    (user_id, rest_id, rating, description))
+        conn.commit()
+        conn.close()
+        flash('Your review has been successfully submitted.')
+        return redirect(url_for('restaurant_details', rest_id=rest_id))
+    else:
+        return render_template('leave_review.html', rest_id=rest_id)
 
 
 if __name__ == '__main__':

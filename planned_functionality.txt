@@ -1,0 +1,13 @@
+Order - needs table and functionality
+
+Review - needs table and functionality - T working on
+
+Signup - needs option to sign up as owner or reg username ???
+
+Edit Menu - needs working - E working on
+
+*Join Queries*
+
+Styling
+
+Edge Cases - login as false user sometimes sticks etc.

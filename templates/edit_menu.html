@@ -11,12 +11,25 @@
         {% for item in menu_items %}
         <li>
             {{ item.name }} - ${{ item.price }}
-            <!-- Add buttons or forms here to modify items -->
+            <!-- Add forms here to modify items -->
+            <form action="/edit_menu/{{ rest_id }}" method="post" style="display: inline;">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="menu_item_id" value="{{ item.menu_item_id }}">
+                <button type="submit">Delete</button>
+            </form>
+            <form action="/edit_menu/{{ rest_id }}" method="post" style="display: inline;">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="menu_item_id" value="{{ item.menu_item_id }}">
+                <input type="text" name="item_name" placeholder="New Item Name" required>
+                <input type="number" step="0.01" name="item_price" placeholder="New Price" required>
+                <button type="submit">Update</button>
+            </form>
         </li>
         {% endfor %}
     </ul>
     <!-- Form to add a new menu item -->
     <form action="/edit_menu/{{ rest_id }}" method="post">
+        <input type="hidden" name="action" value="add">
         <input type="text" name="item_name" placeholder="Item Name" required>
         <input type="number" step="0.01" name="item_price" placeholder="Price" required>
         <button type="submit">Add New Item</button>

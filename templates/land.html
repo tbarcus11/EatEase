@@ -51,7 +51,7 @@
             {% if session.get('logged_in') %}
                 {% if session.get('user_role') == 1 %}
                     <a href="/order/{{ restaurant.rest_id }}" class="btn">Order</a>
-                    <a href="/review/{{ restaurant.rest_id }}" class="btn">Leave Review</a>
+                    <a href="/leave_review/{{ restaurant.rest_id }}" class="btn">Leave Review</a>
                 {% elif session.get('user_role') == 2 %}
                     <a href="/manage/{{ restaurant.rest_id }}" class="btn">Manage Menu</a>
                 {% endif %}

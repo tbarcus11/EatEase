@@ -10,6 +10,7 @@ c = conn.cursor()
 c.execute("DROP TABLE IF EXISTS menu_items")
 c.execute("DROP TABLE IF EXISTS users")
 c.execute("DROP TABLE IF EXISTS restaurants")
+c.execute("DROP TABLE IF EXISTS reviews")
 
 # Create tables
 c.execute('''
@@ -40,12 +41,22 @@ CREATE TABLE menu_items (
     price REAL NOT NULL,
     FOREIGN KEY (rest_id) REFERENCES restaurants(rest_id)
 );
+''')
 
-
+c.execute('''
+    CREATE TABLE reviews (
+    review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    rest_id INTEGER,
+    rating INTEGER,
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (rest_id) REFERENCES restaurants(rest_id)
+);
 ''')
 
 c.execute("INSERT INTO users (username, password, email, role) VALUES ('reg-customer', 'reg-customer', 'reg@gmail.com', 1)")
-c.execute("INSERT INTO users (username, password, email, role) VALUES ('m-owner', 'm-owner', 'mainowner@gmail.com', 2)")
+c.execute("INSERT INTO users (username, password, email, role) VALUES ('o', 'o', 'mainowner@gmail.com', 2)")
 c.execute("INSERT INTO users (username, password, email, role) VALUES ('mcds-owner', 'mcds-owner', 'mcdsowner@gmail.com', 2)")
 
 # Insert mock data
