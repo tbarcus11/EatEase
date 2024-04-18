@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu - EatEase</title>
+</head>
+<body>
+    <h1>Edit Menu</h1>
+    <ul>
+        {% for item in menu_items %}
+        <li>
+            {{ item.name }} - ${{ item.price }}
+            <!-- Add buttons or forms here to modify items -->
+        </li>
+        {% endfor %}
+    </ul>
+    <!-- Form to add a new menu item -->
+    <form action="/edit_menu/{{ rest_id }}" method="post">
+        <input type="text" name="item_name" placeholder="Item Name" required>
+        <input type="number" step="0.01" name="item_price" placeholder="Price" required>
+        <button type="submit">Add New Item</button>
+    </form>
+</body>
+</html>

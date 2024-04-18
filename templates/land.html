@@ -1,0 +1,65 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EatEase</title>
+    <style>
+        .signup-login_btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        .signup-login_btn:hover {
+            background-color: #45a049;
+        }
+        .header {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 10px;
+        }
+        /* Ensure the content below does not overlap with header */
+        body {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if session.get('logged_in') %}
+            <p>Welcome, {{ session.get('username') }}!</p>
+            <a href="/logout"><button class="signup-login_btn">Logout</button></a>
+        {% else %}
+            <a href="/signup"><button class="signup-login_btn">Sign Up</button></a>
+            <a href="/login"><button class="signup-login_btn">Login</button></a>
+        {% endif %}
+    </div>
+    <h1>Welcome to EatEase!</h1>
+    <ul>
+        {% for restaurant in restaurants %}
+        <li>
+            {{ restaurant.name }} - {{ restaurant.location }}
+            {% if session.get('logged_in') %}
+                {% if session.get('user_role') == 1 %}
+                    <a href="/order/{{ restaurant.rest_id }}" class="btn">Order</a>
+                    <a href="/review/{{ restaurant.rest_id }}" class="btn">Leave Review</a>
+                {% elif session.get('user_role') == 2 %}
+                    <a href="/manage/{{ restaurant.rest_id }}" class="btn">Manage Menu</a>
+                {% endif %}
+            {% else %}
+                <a href="/restaurant/{{ restaurant.rest_id }}" class="btn">View Details</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
