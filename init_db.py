@@ -79,6 +79,7 @@ c.execute("INSERT INTO users (username, password, email, role) VALUES ('mcds-own
 # Insert mock data
 c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('The Great Pizza', '123 Main St', 10001)")
 c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('Burger House', '456 Side Ave', 10001)")
+c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('Tans Tacos', '246 KU Ave', 10001)")
 c.execute("INSERT INTO restaurants (name, location, owner) VALUES ('McDonalds', '789 Des St', 10002)")
 
 
