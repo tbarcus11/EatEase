@@ -20,7 +20,7 @@
             padding: 10px 20px;
             text-align: right;
             position: fixed;
-            width: 100%;
+            width: 98%;
             top: 0;
             left: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -81,6 +81,19 @@
         form {
             margin-top: 10px;
         }
+        .backbtn {
+            padding: 8px 15px;
+            margin-left: 10px;
+            background-color: #008cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .backbtn:hover {
+            background-color: #007ba7;
+        }
     </style>
 </head>
 <body>
@@ -115,5 +128,6 @@
         <input type="number" step="0.01" name="item_price" placeholder="Price" required>
         <button type="submit">Add New Item</button>
     </form>
+    <a href="/owner_dashboard" class="backbtn">Back to Restaurants</a>
 </body>
 </html>

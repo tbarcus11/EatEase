@@ -20,7 +20,7 @@
             padding: 10px 20px;
             text-align: right;
             position: fixed;
-            width: 100%;
+            width: 98%;
             top: 0;
             left: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -54,6 +54,48 @@
         a {
             text-decoration: none; /* Removes underline from links */
         }
+        /* ... rest of your CSS above ... */
+
+        /* ... rest of your CSS above ... */
+
+            .centered-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start; /* Aligns container to the top of the page */
+                padding-top: 120px; /* Adjust this value as needed to move the container higher */
+                padding-bottom: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+                background: #ffffff; /* Gives the container a solid background color */
+                border-radius: 10px; /* Optional: adds rounded corners to the container */
+                margin: auto; /* Centers the container horizontally */
+                width: fit-content; /* Ensures the width fits the content */
+                padding: 20px; /* Adds some padding around the buttons */
+                box-sizing: border-box; /* Ensures padding is included in width */
+            }
+
+            /* Update the margin of the buttons if needed */
+            .btn {
+                margin-bottom: 20px; /* Adds space between the buttons */
+                text-align: center; /* Centers the text inside the buttons */
+                width: auto; /* Optional: adjust button width as needed */
+            }
+            .btn:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Since we're using 100vh for the flex container, we may want to adjust body padding */
+            body {
+                padding-top: 0; /* Remove padding top as it is now handled by the flex container */
+                /* Remove margin to ensure centered-container can be truly centered */
+                margin: 0;
+            }
+
+            /* Ensures that the body expands to the minimum height of the viewport */
+            html, body {
+                height: 100%;
+            }
+
     </style>
 </head>
 <body>
@@ -63,7 +105,10 @@
     </div>
     <h1>Welcome to EatEase!</h1>
     <h2>Signup Options</h2>
-    <a href="/signup_user" class="btn">Sign Up as a Customer</a>
-    <a href="/signup_owner" class="btn">Sign Up as an Owner</a>
+    <div class="centered-container">
+        <a href="/signup_user" class="btn">Sign Up as a Customer</a>
+        <a href="/signup_owner" class="btn">Sign Up as an Owner</a>
+    </div>
 </body>
+</html>
 </html>
